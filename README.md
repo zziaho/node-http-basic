@@ -1,4 +1,4 @@
-# Node HTTP Basic
+# Node-HTTP-Basic
 
 Node.js의 기본 `http` 모듈을 사용하여 Express 없이 직접 HTTP 서버를 구현하며, 프레임워크의 개념을 학습하는 프로젝트입니다.
 
