@@ -1,4 +1,5 @@
 const http = require('http');
+const { util } = require('../util');
 
 /**
  * MyApp 클래스는 기본 HTTP 서버를 기반으로 
@@ -26,7 +27,12 @@ class MyApp {
      * @param {Function} handler - (req, res) 형태의 요청 처리 함수
      */
     route(method, path, handler) {
-        this.routes.push({ method, path, handler});
+        if (path.includes(':')) {
+            const { regex, paramNames } = util.pathToRegex(path);
+            this.routes.push({ method, regex, paramNames, handler});        
+        } else {
+            this.routes.push({ method, path, handler});
+        }
     }
 
     /**
@@ -73,15 +79,32 @@ class MyApp {
     #handleRoute(req, res) {
         const { method, url } = req;
 
+        // 정규식이 존재하는 route 우선 처리
+        for (const route of this.routes) {
+            if (route.regex && route.method === method) {
+                const match = url.match(route.regex);
+                if (match) {
+                    // 파라미터 추출
+                    const params = {};
+                    route.paramNames.forEach((name, idx) => {
+                        params[name]  = match[idx + 1];
+                    });
+                    req.params = params;
+
+                    return route.handler(req, res);
+                }
+            }
+        }
+
+        // 정규식 없는 route 처리
         // 등록된 라우트 중 method와 path가 모두 일치하는 항목 찾기
         const matched = this.routes.find(route => route.method == method && route.path === url);
-
         if (matched) {
-            matched.handler(req, res);
-        } else {
-            res.writeHead(404, { 'Content-Type': 'text/plain'});
-            res.end('404 Not Found');
+            return matched.handler(req, res);
         }
+
+        res.writeHead(404, { 'Content-Type': 'text/plain'});
+        res.end('404 Not Found');
     }
 
 }

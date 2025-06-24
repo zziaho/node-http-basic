@@ -23,6 +23,12 @@ app.route('GET', '/about', (req, res) => {
     util.sendJson(res, 200, 'About Page');
 });
 
+// 동적 URL 파라미터 처리
+app.route('GET', '/users/:id', (req, res) => {
+    const userId = req.params.id
+    util.sendJson(res, 200, 'User Found', { userId });
+});
+
 app.route('POST', '/contact', async (req, res) => {
     const body = await util.parseRequestBody(req);
     util.sendJson(res, 200, 'Contact Received', body);
