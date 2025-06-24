@@ -17,15 +17,25 @@ Node.js의 기본 `http` 모듈을 사용하여 Express 없이 직접 HTTP 서�
 
 ## 📁 프로젝트 구조
 node-http-basic/
+
 ├── framework/
-│ ├── app.js    # MyApp 프레임워크를 사용하는 서버 진입점
-│ └── myApp.js  # 프레임워크처럼 사용할 수 있는 클래스 설계
+
+│ ├── app.js # MyApp 프레임워크를 사용하는 서버 진입점
+
+│ └── myApp.js # 프레임워크처럼 사용할 수 있는 클래스 설계
+
 ├── middleware/
-│ ├── logger.js # 요청 로그 출력 미들웨어
-│ └── index.js  # 미들웨어 모듈 묶음
-├── routes.js   # 기존 http 서버 라우팅
-├── server.js   # 기본 http 서버 실행 파일
-├── util.js     # Body parser, 응답 포맷 등 공통 유틸 함수
+
+│ ├── index.js # 미들웨어 모듈 묶음
+
+│ └── logger.js # 요청 로그 출력 미들웨어
+
+├── routes.js # 기존 http 서버 라우팅
+
+├── server.js # 기본 http 서버 실행 파일
+
+├── util.js # Body parser, 응답 포맷 등 공통 유틸 함수
+
 └── README.md
 
 ---
