@@ -73,13 +73,22 @@ class MyApp {
 
     /**
      * (private) URL과 메서드에 맞는 라우트 처리
+     * - 동적 라우팅(:id 등)은 정규식으로 매칭하여 req.params에 주입
+     * - 쿼리스트링 파싱 후 req.query로 주입
      * @param {IncomingMessage} req
      * @param {ServerResponse} res
      */
     #handleRoute(req, res) {
         const { method, url } = req;
 
-        // 정규식이 존재하는 route 우선 처리
+        // URL 파싱
+        const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+        const pathName = parsedUrl.pathname;
+
+        // 쿼리스트링을 객체로 변환해 req.query에 주입
+        req.query = Object.fromEntries(parsedUrl.searchParams.entries());
+        
+        // 동적 route 처리 (정규식 기반)
         for (const route of this.routes) {
             if (route.regex && route.method === method) {
                 const match = url.match(route.regex);
@@ -96,13 +105,13 @@ class MyApp {
             }
         }
 
-        // 정규식 없는 route 처리
-        // 등록된 라우트 중 method와 path가 모두 일치하는 항목 찾기
-        const matched = this.routes.find(route => route.method == method && route.path === url);
+        // 정적 route 처리
+        const matched = this.routes.find(route => route.method == method && route.path === pathName);
         if (matched) {
             return matched.handler(req, res);
         }
 
+        // 404 Not Found
         res.writeHead(404, { 'Content-Type': 'text/plain'});
         res.end('404 Not Found');
     }

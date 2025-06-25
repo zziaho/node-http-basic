@@ -29,6 +29,19 @@ app.route('GET', '/users/:id', (req, res) => {
     util.sendJson(res, 200, 'User Found', { userId });
 });
 
+// GET /search 쿼리 스트링 처리
+app.route('GET', '/search', (req, res) => {
+    const { keyword } = req.query;
+
+    // keyword 유효성 검사
+    if (!keyword || keyword.trim() === '') {
+        return util.sendJson(res, 400, '검색어(keyword)가 누락되었거나 비어 있습니다.', {}, false);
+    }
+
+    // 정상 응답
+    util.sendJson(res, 200, 'Search Result', { keyword });
+})
+
 app.route('POST', '/contact', async (req, res) => {
     const body = await util.parseRequestBody(req);
     util.sendJson(res, 200, 'Contact Received', body);
