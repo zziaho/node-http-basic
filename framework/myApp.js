@@ -8,8 +8,9 @@ const { util } = require('../util');
 class MyApp {
 
     constructor() {
-        this.middlewares = [];  // 미들웨어 목록
-        this.routes = [];       // 라우팅 정보 목록
+        this.middlewares = [];      // 미들웨어 목록
+        this.errorMiddlewares = []; // 에러 핸들링 미들웨어
+        this.routes = [];           // 라우팅 정보 목록
     }
 
     /**
@@ -17,7 +18,11 @@ class MyApp {
      * @param {Function} middleware - (req, res, next) 형태의 함수
      */
     use(middleware) {
-        this.middlewares.push(middleware);
+        if (middleware.length === 4) {
+            this.errorMiddlewares.push(middleware); // (err, req, res, next)
+        } else {
+            this.middlewares.push(middleware);
+        }
     }
 
     /**
@@ -61,9 +66,17 @@ class MyApp {
      */
     #runMiddlewares(req, res, done) {
         let i = 0;
-        const next = () => {
+        const next = (err) => {
+            if (err) {
+                return this.#runErrorMiddlewares(err, req, res);
+            }
+
             if (i < this.middlewares.length) {
-                this.middlewares[i++](req, res, next);
+                try {
+                    this.middlewares[i++](req, res, next);
+                } catch (e) {
+                    next(e);
+                }
             } else {
                 done(); // 모든 미들웨어 실행 이후 route 처리
             }
@@ -114,6 +127,27 @@ class MyApp {
         // 404 Not Found
         res.writeHead(404, { 'Content-Type': 'text/plain'});
         res.end('404 Not Found');
+    }
+
+    /**
+     * 
+     */
+    #runErrorMiddlewares(err, req, res) {
+        let i = 0;
+        const next = (err) => {
+            if (i < this.errorMiddlewares.length) {
+                this.errorMiddlewares[i++](err, req, res, next);
+            } else {
+                // 마지막까지 처리 못하면 기본 응답
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({
+                    success: false,
+                    message: 'Internal Server Error',
+                    error: err.message,
+                }));
+            }
+        };
+        next(err);
     }
 
 }

@@ -42,10 +42,21 @@ app.route('GET', '/search', (req, res) => {
     util.sendJson(res, 200, 'Search Result', { keyword });
 })
 
+// 오류 강제 발생 라우트
+app.route('GET', '/error', (req, res) => {
+    throw new Error('Forced error occurs!');
+})
+
 app.route('POST', '/contact', async (req, res) => {
     const body = await util.parseRequestBody(req);
     util.sendJson(res, 200, 'Contact Received', body);
 });
+
+// 에러 미들웨어 등록
+app.use((err, req, res, next) => {
+    console.log('ERROR:', err.message);
+    util.sendJson(res, 500, 'Error Middleware Response', { message: err.message }, false);
+})
 
 // 서버 실행
 app.listen(PORT);
