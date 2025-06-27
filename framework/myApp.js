@@ -71,15 +71,16 @@ class MyApp {
                 return this.#runErrorMiddlewares(err, req, res);
             }
 
-            if (i < this.middlewares.length) {
-                try {
-                    this.middlewares[i++](req, res, next);
-                } catch (e) {
-                    next(e);
-                }
-            } else {
-                done(); // 모든 미들웨어 실행 이후 route 처리
+            if (i >= this.middlewares.length) {
+                return done(); // 모든 미들웨어 실행 완료
             }
+            
+            try {
+                this.middlewares[i++](req, res, next);
+            } catch (e) {
+                next(e);
+            }
+
         };
         next();
     }
