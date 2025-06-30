@@ -114,7 +114,8 @@ class MyApp {
                     });
                     req.params = params;
 
-                    return route.handler(req, res);
+                    this.#runHandler(route.handler, req, res);
+                    return;
                 }
             }
         }
@@ -122,7 +123,8 @@ class MyApp {
         // 정적 route 처리
         const matched = this.routes.find(route => route.method == method && route.path === pathName);
         if (matched) {
-            return matched.handler(req, res);
+            this.#runHandler(matched.handler, req, res);
+            return;
         }
 
         // 404 Not Found
@@ -149,6 +151,26 @@ class MyApp {
             }
         };
         next(err);
+    }
+
+    /**
+     * (private) 라우트 핸들러 실행 및 예외 처리
+     * - 동기 예외는 try/catch로 즉시 처리
+     * - 비동기 함수(async)인 경우, Promise.catch로 예외 전파
+     * - 에러 발생 시 에러 미들웨어 실행
+     * @param {Function} handler - 등록된 라우트 핸들러 함수
+     * @param {IncomingMessage} req - 요청 객체
+     * @param {ServerResponse} res - 응답 객체
+     */
+    #runHandler(handler, req, res) {
+        try {
+            const isPromise = handler(req, res);
+            if (isPromise instanceof Promise) {
+                isPromise.catch(err => this.#runErrorMiddlewares(err, req, res));
+            }
+        } catch (err) {
+            this.#runErrorMiddlewares(err, req, res);
+        }
     }
 
 }

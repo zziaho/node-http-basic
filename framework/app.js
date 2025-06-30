@@ -46,6 +46,10 @@ app.route('GET', '/search', (req, res) => {
 app.route('GET', '/error', (req, res) => {
     throw new Error('Forced error occurs!');
 })
+// 비동기 오류 강제 발생 라우트 
+app.route('GET', '/asyncError', async (req, res) => {
+    throw new Error('Forced Async Error occurs!'); // == Promise.reject()
+})
 
 app.route('POST', '/contact', async (req, res) => {
     const body = await util.parseRequestBody(req);
