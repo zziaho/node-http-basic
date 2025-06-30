@@ -1,5 +1,5 @@
 const http = require('http');
-const { util } = require('../utils/util');
+const utils = require('../utils');
 
 /**
  * MyApp 클래스는 기본 HTTP 서버를 기반으로 
@@ -33,7 +33,7 @@ class MyApp {
      */
     route(method, path, handler) {
         if (path.includes(':')) {
-            const { regex, paramNames } = util.pathToRegex(path);
+            const { regex, paramNames } = utils.route.pathToRegex(path);
             this.routes.push({ method, regex, paramNames, handler});        
         } else {
             this.routes.push({ method, path, handler});
@@ -128,7 +128,7 @@ class MyApp {
         }
 
         // 404 Not Found
-        if (!util.validateResponse(res)) return;
+        if (!utils.response.validateResponse(res)) return;
         res.writeHead(404, { 'Content-Type': 'text/plain'});
         res.end('404 Not Found');
     }
@@ -142,7 +142,7 @@ class MyApp {
             if (i < this.errorMiddlewares.length) {
                 this.errorMiddlewares[i++](err, req, res, next);
             } else {
-                if (!util.validateResponse(res)) return;
+                if (!utils.response.validateResponse(res)) return;
                 
                 // 마지막까지 처리 못하면 기본 응답
                 res.writeHead(500, { 'Content-Type': 'application/json' });
