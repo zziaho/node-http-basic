@@ -4,7 +4,7 @@
  * 라우팅: 요청 경로(URL)에 따라 어떤 동작을 할지 결정하는 것
  */
 
-const { util } = require('./util');
+const { util } = require('./utils/util');
 
 async function handleRoute(req, res) {
     /**

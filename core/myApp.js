@@ -1,5 +1,5 @@
 const http = require('http');
-const { util } = require('../util');
+const { util } = require('../utils/util');
 
 /**
  * MyApp 클래스는 기본 HTTP 서버를 기반으로 

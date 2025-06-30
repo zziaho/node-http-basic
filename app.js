@@ -1,6 +1,6 @@
-const MyApp = require('./myApp');
-const middlewares = require('../middleware');
-const { util } = require('../util');
+const MyApp = require('./core/myApp');
+const middlewares = require('./middleware');
+const { util } = require('./utils/util');
 
 /**
  * <app.js>
