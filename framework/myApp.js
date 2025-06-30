@@ -128,6 +128,7 @@ class MyApp {
         }
 
         // 404 Not Found
+        if (!util.validateResponse(res)) return;
         res.writeHead(404, { 'Content-Type': 'text/plain'});
         res.end('404 Not Found');
     }
@@ -141,6 +142,8 @@ class MyApp {
             if (i < this.errorMiddlewares.length) {
                 this.errorMiddlewares[i++](err, req, res, next);
             } else {
+                if (!util.validateResponse(res)) return;
+                
                 // 마지막까지 처리 못하면 기본 응답
                 res.writeHead(500, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({

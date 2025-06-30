@@ -51,6 +51,18 @@ app.route('GET', '/asyncError', async (req, res) => {
     throw new Error('Forced Async Error occurs!'); // == Promise.reject()
 })
 
+// 중복 응답 강제 발생 라우트
+app.route('GET', '/double-response', (req, res) => {
+    util.sendJson(res, 200, '1st Response', { step: 1 });
+    util.sendJson(res, 200, '2nd Response', { step: 2 });
+});
+// 중복 응답 async
+app.route('GET', '/double-async', async (req, res) => {
+    util.sendJson(res, 200, '1st Response');
+    await new Promise(resolve => setTimeout(resolve, 100));
+    util.sendJson(res, 200, '2nd Response');
+});
+
 app.route('POST', '/contact', async (req, res) => {
     const body = await util.parseRequestBody(req);
     util.sendJson(res, 200, 'Contact Received', body);
