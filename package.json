@@ -1,0 +1,24 @@
+{
+  "name": "http-basic",
+  "version": "1.0.0",
+  "description": "Node.js의 기본 `http` 모듈을 사용하여 Express 없이 직접 HTTP 서버를 구현하며, 프레임워크의 개념을 학습하는 프로젝트입니다.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-userB:zziaho/node-http-basic.git"
+  },
+  "_moduleAliases": {
+    "@core": "core",
+    "@middleware": "middleware",
+    "@utils": "utils"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "module-alias": "^2.2.3"
+  }
+}

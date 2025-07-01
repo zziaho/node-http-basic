@@ -1,6 +1,8 @@
-const MyApp = require('./core/myApp');
-const middlewares = require('./middleware');
-const utils = require('./utils');
+require('module-alias/register');
+
+const MyApp = require('@core/myApp');
+const middlewares = require('@middleware');
+const utils = require('@utils');
 
 /**
  * <app.js>
