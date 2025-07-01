@@ -66,7 +66,7 @@ app.route('GET', '/double-async', async (req, res) => {
 });
 
 app.route('POST', '/contact', async (req, res) => {
-    const body = await util.parseRequestBody(req);
+    const body = await utils.body.parseRequestBody(req);
     utils.response.sendJson(res, 200, 'Contact Received', body);
 });
 
