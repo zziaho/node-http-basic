@@ -13,7 +13,8 @@
   "_moduleAliases": {
     "@core": "core",
     "@middleware": "middleware",
-    "@utils": "utils"
+    "@utils": "utils",
+    "@routes": "routes"
   },
   "keywords": [],
   "author": "",
