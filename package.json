@@ -20,6 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^17.0.1",
     "module-alias": "^2.2.3"
   }
 }

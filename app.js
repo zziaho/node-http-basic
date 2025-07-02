@@ -4,6 +4,7 @@
  * 프레임워크처럼 앱 객체를 구성해, 라우팅 및 미들웨어를 선언형으로 정의
  */
 
+require('dotenv').config();
 require('module-alias/register');
 
 const MyApp = require('@core/myApp');
@@ -13,7 +14,7 @@ const registerRoutes = require('@routes');
 
 
 const app = new MyApp();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // 미들웨어 등록
 middlewares.forEach(middleware => app.use(middleware));
