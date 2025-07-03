@@ -27,8 +27,6 @@ node-http-basic/
 ├── .env                      # 환경 변수 (예: PORT)
 ├── .env.example              # 샘플 환경 변수 파일
 ├── package.json              # 의존성 및 alias 설정
-├── config/
-│   └── index.js              # 환경변수 래퍼 모듈
 ├── core/
 │   └── myApp.js              # MyApp 클래스 (라우팅 & 미들웨어 처리)
 ├── middleware/
