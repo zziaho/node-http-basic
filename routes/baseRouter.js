@@ -28,8 +28,12 @@ module.exports = function(app) {
 
     // Contact 폼 데이터 수신
     app.route('POST', '/contact', async (req, res) => {
-        const body = await utils.body.parseRequestBody(req);
-        utils.response.sendJson(res, 200, 'Contact Received', body);
+        try {
+            const body = await utils.body.parseRequestBody(req);
+            utils.response.sendJson(res, 200, 'Contact Received', body);
+        } catch(err) {
+            utils.response.sendJson(res, 400, err.message, {}, false);
+        }
     });
 
 }
