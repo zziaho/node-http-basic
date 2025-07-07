@@ -13,28 +13,48 @@ const responseUtil = {
      * @param {boolean} [success=true] - 요청 성공 여부
      */
     sendJson(res, statusCode, message, data = {}, success = true) {
+        // 1. 중복 응답 전송 확인
         if (!this.validateResponse(res)) return;
-        res.writeHead(statusCode, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({
+
+        // 2. 기본 응답 형식 구성
+        const responseBody = {
             statusCode,
-            success,
+            success: success !== undefined ? success : statusCode < 400,
             message,
-            data,
-        }));
+            data
+        };
+        const json = JSON.stringify(responseBody);
+
+        // 3. 헤더 설정
+        res.statusCode = statusCode;
+        res.setHeader('Content-Type', 'application/json');
+
+        // 4. 본문 전송 및 스트림 종료
+        res.end(json);
     },
 
     /**
-     * 응답 객체가 이미 종료되었는지 검사하는 유틸리티 함수
-     * 
-     * - res.writableEnded 값이 true인 경우, 이미 응답이 완료되어
-     *   헤더나 본문을 더 이상 작성할 수 없음을 의미함.
-     * - 중복 응답을 방지하기 위해 사용되며,
-     *   상황에 따라 콘솔 경고를 출력하고 false를 반환함.
-     * 
+     * 응답 객체가 응답 가능한 상태인지 검사하는 유틸리티 함수
+     *
+     * - res.headersSent가 true인 경우:
+     *   이미 응답 헤더가 전송되어, 상태 코드나 헤더를 더 이상 설정할 수 없음.
+     *
+     * - res.writableEnded가 true인 경우:
+     *   응답 본문까지 모두 전송되어 스트림이 종료된 상태로,
+     *   더 이상 데이터를 전송할 수 없음.
+     *
+     * - 이 함수는 중복 응답이나 예기치 않은 오류를 방지하기 위해 사용.
+     *   응답이 불가능한 경우 콘솔 경고를 출력하고 false를 반환.
+     *
      * @param {ServerResponse} res - 응답 객체
-     * @returns {boolean} 응답이 가능한 상태인지 여부 (true: 가능, false: 이미 끝남)
+     * @returns {boolean} 응답이 가능한 상태: true / 불가능 상태: false
      */
     validateResponse(res) {
+        if (res.headersSent) {
+            console.warn('[WARN] 응답 헤더가 이미 전송되었습니다.');
+            return false;
+        }
+
         if (res.writableEnded) {
             console.warn('[WARN] 응답이 이미 완료된 상태입니다.');
             return false;
