@@ -10,5 +10,6 @@ module.exports = function (app) {
     require('./userRouter')(app);
     require('./searchRouter')(app);
     require('./testRouter')(app);
+    require('./debugRouter')(app);
 
 };
