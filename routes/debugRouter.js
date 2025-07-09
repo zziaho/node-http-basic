@@ -1,8 +1,8 @@
 /**
  * [debugRouter.js]
  * 
- * HTTP 요청(req) 및 응답(res) 객체의 구조를 디버깅 용도로 확인할 수 있는 라우트입니다.
- * /debug/req-res 경로로 접근하면 요청/응답의 주요 정보들을 JSON 형태로 반환합니다.
+ * HTTP 요청(req) 및 응답(res) 객체의 구조를 디버깅 용도로 확인할 수 있는 라우트
+ * /debug/req-res 경로로 접근하면 요청/응답의 주요 정보들을 JSON 형태로 반환
  */
 const utils = require('@utils');
 
@@ -21,7 +21,8 @@ module.exports = function (app) {
                 remotePort: req.socket.remotePort,          // 클라이언트 포트
                 localAddress: req.socket.localAddress,      // 서버 IP 주소
                 localPort: req.socket.localPort             // 서버 포트
-            }
+            },
+            query: req.query                                // 쿼리스트링
         };
 
         const resInfo = {
