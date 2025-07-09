@@ -98,9 +98,6 @@ class MyApp {
         // URL 파싱
         const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
         const pathName = parsedUrl.pathname;
-
-        // 쿼리스트링을 객체로 변환해 req.query에 주입
-        req.query = Object.fromEntries(parsedUrl.searchParams.entries());
         
         // 동적 route 처리 (정규식 기반)
         for (const route of this.routes) {

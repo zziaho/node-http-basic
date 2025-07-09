@@ -1,5 +1,6 @@
 const logger = require('./logger');
+const queryParser = require('./queryParser');
 
-const middleware = [logger];
+const middleware = [logger, queryParser];
 
 module.exports = middleware;
