@@ -94,10 +94,7 @@ class MyApp {
      */
     #handleRoute(req, res) {
         const { method, url } = req;
-
-        // URL 파싱
-        const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
-        const pathName = parsedUrl.pathname;
+        const pathName = req.parsedUrl.pathname;
         
         // 동적 route 처리 (정규식 기반)
         for (const route of this.routes) {
