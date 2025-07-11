@@ -35,7 +35,15 @@ module.exports = function (app) {
             request: reqInfo,
             response: resInfo
         });
+    });
 
+    // [POST] /debug/body
+    // 요청 Body를 받아 그대로 JSON 응답으로 반환
+    app.route('POST', '/debug/body', (req, res) => {
+        console.log('[DEBUG] req.body:', req.body);
+        utils.response.sendJson(res, 200, 'Body Debug', {
+            body: req.body
+        });
     });
 
 };
